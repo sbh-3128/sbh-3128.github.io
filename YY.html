@@ -23,7 +23,6 @@
             position: relative;
         }
 
-        /* 全屏星光 */
         .star {
             position: absolute;
             background: #ffffff;
@@ -41,14 +40,12 @@
             to { opacity: 1; }
         }
 
-        /* 主卡片 + 流光边框 */
         .box {
             text-align: center;
             background: rgba(255, 255, 255, 0.45);
             padding: 45px 35px;
             border-radius: 24px;
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             box-shadow: 0 10px 40px rgba(236, 160, 190, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
             position: relative;
             z-index: 10;
@@ -89,7 +86,6 @@
             letter-spacing: 1px;
         }
 
-        /* 中心爱心 */
         .heart {
             width: 106px;
             height: 96px;
@@ -147,7 +143,6 @@
             to { transform: translateY(-4px); }
         }
 
-        /* 各类爱心动画 */
         .float-heart {
             position: absolute;
             color: #f25c83;
@@ -185,7 +180,6 @@
             100% { transform: translate(var(--x), var(--y)) scale(1.3); opacity: 0; }
         }
 
-        /* 成功总容器 */
         .success {
             position: fixed;
             top: 0;
@@ -202,7 +196,6 @@
             overflow: hidden;
         }
 
-        /* 图片轮播区域 */
         .slide-box {
             width: 70%;
             max-width: 500px;
@@ -233,7 +226,6 @@
             to { opacity: 1; }
         }
 
-        /* 牵手文案区域（轮播后显示） */
         .text-box {
             margin-top: 30px;
             text-align: center;
@@ -284,17 +276,15 @@
         </div>
     </div>
 
-    <!-- 成功页：图片轮播 + 牵手文案 -->
     <div class="success" id="successPage">
-        <!-- 图片轮播容器 -->
         <div class="slide-box" id="slideBox">
-            <img class="slide-img active" src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns3fr37/3e301313903847388328309003011333~tplv-a9rns3fr37-image.image" alt="YY的照片">
-            <img class="slide-img" src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns3fr37/2138313903847388328309003011334~tplv-a9rns3fr37-image.image" alt="YY的照片">
-            <img class="slide-img" src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns3fr37/309003011335~tplv-a9rns3fr37-image.image" alt="YY的照片">
-            <img class="slide-img" src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns3fr37/309003011336~tplv-a9rns3fr37-image.image" alt="YY的照片">
+            <!-- 👉 已改成 GitHub 本地图片路径 -->
+            <img class="slide-img active" src="images/1.jpg">
+            <img class="slide-img" src="images/2.jpg">
+            <img class="slide-img" src="images/3.jpg">
+            <img class="slide-img" src="images/4.jpg">
         </div>
 
-        <!-- 牵手主题文案 -->
         <div class="text-box" id="textBox">
             <div class="main-title">❤️ 从此牵手同行 ❤️</div>
             <div class="sub-text">
@@ -315,7 +305,6 @@
         let moveRange = 30;
         let slideIndex = 0;
 
-        // 创建星光
         function createStar() {
             const star = document.createElement('div');
             star.classList.add('star');
@@ -329,7 +318,6 @@
         }
         for(let i = 0; i < 80; i++) createStar();
 
-        // 飘落爱心
         function createHeart() {
             const heart = document.createElement('div');
             heart.innerHTML = '❤️';
@@ -342,7 +330,6 @@
         }
         setInterval(createHeart, 260);
 
-        // 点击屏幕爱心
         document.body.addEventListener('click', function(e) {
             const heart = document.createElement('div');
             heart.innerHTML = '💖';
@@ -353,7 +340,6 @@
             setTimeout(() => heart.remove(), 1400);
         });
 
-        // 拒绝按钮移动
         function moveBtn() {
             moveRange += 9;
             const x = Math.random() * moveRange - moveRange / 2;
@@ -366,7 +352,6 @@
             moveBtn();
         });
 
-        // 礼花爱心
         function fireworkHeart() {
             const heart = document.createElement('div');
             heart.innerHTML = ['💗','❤️','💖','💕','💓'][Math.floor(Math.random()*5)];
@@ -381,30 +366,25 @@
             setTimeout(() => heart.remove(), 2000);
         }
 
-        // 图片轮播函数
         function autoSlide() {
             slideImgs[slideIndex].classList.remove('active');
             slideIndex = (slideIndex + 1) % slideImgs.length;
             slideImgs[slideIndex].classList.add('active');
         }
 
-        // 点击同意 主流程
         yesBtn.addEventListener('click', function () {
             successPage.style.display = 'flex';
 
-            // 爱心+礼花特效
             setInterval(createHeart, 50);
             for(let i = 0; i < 60; i++) setTimeout(createHeart, i * 25);
             const fireTimer = setInterval(fireworkHeart, 90);
             setTimeout(() => clearInterval(fireTimer), 5000);
 
-            // 1. 先显示图片轮播
             setTimeout(() => {
                 slideBox.classList.add('show');
                 setInterval(autoSlide, 3000);
             }, 800);
 
-            // 2. 图片轮播完毕，弹出牵手文案
             setTimeout(() => {
                 textBox.classList.add('show');
             }, 800 + slideImgs.length * 3000);
