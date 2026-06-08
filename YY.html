@@ -260,6 +260,11 @@
     </style>
 </head>
 <body>
+    <!-- FLAC 格式专用 -->
+<audio id="bgm" loop preload="auto">
+    <source src="music/bgm.flac" type="audio/flac">
+    
+
     <div class="box">
         <h1>致 YY：</h1>
         <div class="heart"></div>
@@ -278,11 +283,10 @@
 
     <div class="success" id="successPage">
         <div class="slide-box" id="slideBox">
-            <!-- 👉 已改成 GitHub 本地图片路径 -->
-            <img class="slide-img active" src="/images/1.jpg">
-            <img class="slide-img" src="/images/2.jpg">
-            <img class="slide-img" src="/images/3.jpg">
-            <img class="slide-img" src="/images/4.jpg">
+            <img class="slide-img active" src="images/1.jpg">
+            <img class="slide-img" src="images/2.jpg">
+            <img class="slide-img" src="images/3.jpg">
+            <img class="slide-img" src="images/4.jpg">
         </div>
 
         <div class="text-box" id="textBox">
@@ -302,8 +306,14 @@
         const slideBox = document.getElementById('slideBox');
         const textBox = document.getElementById('textBox');
         const slideImgs = document.querySelectorAll('.slide-img');
+        const bgm = document.getElementById('bgm');
         let moveRange = 30;
         let slideIndex = 0;
+
+        // 兼容浏览器/移动端：页面首次点击后自动播放音乐（解决浏览器静音策略）
+        document.addEventListener('click', function(){
+            bgm.play();
+        }, {once: true});
 
         function createStar() {
             const star = document.createElement('div');
