@@ -11,12 +11,13 @@
             box-sizing: border-box;
         }
 
+        /* ✅ 新背景：高级温柔紫粉渐变（超好看、不刺眼） */
         body {
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(120deg, #ff9a9e 0%, #fecfef 100%);
+            background: linear-gradient(135deg, #f0d8e8 0%, #e2c8e7 30%, #d4b8f2 60%, #c3a6f7 100%);
             font-family: "Microsoft YaHei", sans-serif;
             overflow: hidden;
             animation: pageFade 1.5s ease;
@@ -29,25 +30,25 @@
 
         .box {
             text-align: center;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.35);
             padding: 40px 30px;
             border-radius: 20px;
             backdrop-filter: blur(8px);
-            box-shadow: 0 8px 30px rgba(255, 74, 122, 0.3);
+            box-shadow: 0 8px 30px rgba(190, 150, 220, 0.3);
             z-index: 10;
             max-width: 90%;
         }
 
         h1 {
             font-size: 40px;
-            color: #d6336c;
+            color: #9966cc;
             margin-bottom: 15px;
             animation: textBeat 1s infinite alternate;
         }
 
         .text {
             font-size: 20px;
-            color: #c2255c;
+            color: #8855bb;
             line-height: 1.8;
             margin: 20px 0;
         }
@@ -68,7 +69,7 @@
             width: 50px;
             height: 80px;
             border-radius: 50px 50px 0 0;
-            background: #ff4a7a;
+            background: #cc7fbb;
         }
 
         .heart:before {
@@ -99,13 +100,13 @@
         }
 
         #yes {
-            background: #ff4a7a;
+            background: #b581d6;
             color: #fff;
         }
 
         #no {
             background: #fff;
-            color: #d6336c;
+            color: #9966cc;
             position: relative;
             touch-action: none;
         }
@@ -123,7 +124,7 @@
 
         .float-heart {
             position: absolute;
-            color: #ff4a7a;
+            color: #cc7fbb;
             font-size: 20px;
             animation: float 5s linear infinite;
             pointer-events: none;
@@ -131,7 +132,7 @@
 
         .click-heart {
             position: absolute;
-            color: #ff4a7a;
+            color: #b581d6;
             font-size: 24px;
             animation: clickFloat 1.2s ease-out forwards;
             pointer-events: none;
@@ -167,7 +168,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(255,74,122,0.95);
+            background: rgba(181, 129, 214, 0.95);
             display: none;
             justify-content: center;
             align-items: center;
@@ -228,7 +229,6 @@
         const subTip = document.getElementById('subTip');
         let moveRange = 30;
 
-        // 常规飘落爱心
         function createHeart() {
             const heart = document.createElement('div');
             heart.innerHTML = '❤️';
@@ -241,7 +241,6 @@
         }
         setInterval(createHeart, 280);
 
-        // 点击屏幕弹出爱心
         document.body.addEventListener('click', function(e) {
             const heart = document.createElement('div');
             heart.innerHTML = '💖';
@@ -252,7 +251,6 @@
             setTimeout(() => heart.remove(), 1200);
         });
 
-        // 拒绝按钮 越碰越远
         function moveBtn() {
             moveRange += 8;
             const x = Math.random() * moveRange - moveRange / 2;
@@ -265,7 +263,6 @@
             moveBtn();
         });
 
-        // 礼花爆炸爱心（同意后全屏炸开）
         function fireworkHeart() {
             const heart = document.createElement('div');
             heart.innerHTML = ['💗','❤️','💖','💕'][Math.floor(Math.random()*4)];
@@ -280,7 +277,6 @@
             setTimeout(() => heart.remove(), 1800);
         }
 
-        // 轮换趣味文案
         const titleList = [
             "❤️ 太棒啦！❤️",
             "🥳 恋爱达成！🥳",
@@ -294,21 +290,17 @@
             "锁定你啦，我的女孩🌹"
         ];
 
-        // 点击同意 核心特效
         yesBtn.addEventListener('click', function () {
             successPage.style.display = 'flex';
 
-            // 1. 爱心密度拉满
             setInterval(createHeart, 60);
             for(let i = 0; i < 50; i++){
                 setTimeout(createHeart, i * 30);
             }
 
-            // 2. 中心礼花爱心持续炸开
             const fireTimer = setInterval(fireworkHeart, 100);
             setTimeout(() => clearInterval(fireTimer), 4000);
 
-            // 3. 文字自动轮换
             let idx = 0;
             setInterval(() => {
                 idx = (idx + 1) % titleList.length;
