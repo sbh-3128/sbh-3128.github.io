@@ -23,7 +23,21 @@
             position: relative;
         }
 
-        /* 右上角音乐播放器 */
+        /* 星光特效 */
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2.5s infinite ease-in-out;
+            pointer-events: none;
+            box-shadow: 0 0 4px #fff, 0 0 8px #ffb3c6;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* 音乐播放器 */
         .music-player {
             position: fixed;
             top: 20px;
@@ -65,7 +79,7 @@
             transform: scale(0.9);
         }
 
-        /* 游戏弹窗样式 */
+        /* 游戏面板 */
         .game-box {
             text-align: center;
             background: rgba(255, 255, 255, 0.5);
@@ -115,14 +129,10 @@
             margin-top: 15px;
             height: 24px;
         }
-        .err {
-            color: #e53935;
-        }
-        .success {
-            color: #43a047;
-        }
+        .err { color: #e53935; }
+        .success { color: #43a047; }
 
-        /* 原表白卡片 */
+        /* 表白面板 */
         .box {
             display: none;
             text-align: center;
@@ -211,8 +221,6 @@
         #no {
             background: #ffffff;
             color: #c85a82;
-            position: relative;
-            touch-action: none;
             border: 1px solid #ffd6e0;
         }
         #no:active { transform: scale(0.96); }
@@ -348,37 +356,35 @@
     </style>
 </head>
 <body>
-    <!-- 右上角音乐播放器 -->
     <div class="music-player">
         <span class="music-name">就是爱你</span>
         <button class="play-btn" id="playBtn">▶</button>
     </div>
 
-    <!-- 背景音乐 -->
     <audio id="bgm" loop preload="auto">
         <source src="music/陶喆 - 就是爱你_HQ.mp3" type="audio/mpeg">
-    
+    </audio>
 
     <!-- 小游戏区域 -->
     <div class="game-box" id="gameBox">
         <h2 class="game-title">先来玩个小游戏吧 💖</h2>
-        <p class="game-tip">猜猜我心里想的数字（范围 1 ~ 10）</p>
+        <p class="game-tip">猜猜我心里想的数字（范围 1 ~ 1000）</p>
         <input type="number" class="game-input" id="numInput" placeholder="输入数字">
         <br>
         <button class="game-btn" id="submitBtn">确定</button>
         <div class="game-msg" id="msgBox"></div>
     </div>
 
-    <!-- 表白主界面 -->
+    <!-- 表白区域 -->
     <div class="box" id="loveBox">
         <h1>致 YY：</h1>
         <div class="heart"></div>
         <div class="text">
-            YY，我喜欢你呀～<br>
+            YY，我喜欢你<br>
             喜欢你的性格，更喜欢你甜甜的笑容。<br>
             好想往后的路，都有你陪着我。<br>
             我会慢慢变好，努力成为最适合你的人🌹<br>
-            所以……要不要做我女朋友呀？
+            所以……你能做我女朋友吗？
         </div>
         <div class="btn-group">
             <button id="yes">答应你</button>
@@ -386,13 +392,13 @@
         </div>
     </div>
 
-    <!-- 成功页 图片+文案 -->
+    <!-- 成功收尾页 -->
     <div class="success" id="successPage">
         <div class="slide-box" id="slideBox">
-            <img class="slide-img active" src="images/1.jpg">
-            <img class="slide-img" src="images/2.jpg">
-            <img class="slide-img" src="images/3.jpg">
-            <img class="slide-img" src="images/4.jpg">
+            <img class="slide-img active" src="images/1.jpg" alt="我们的回忆1">
+            <img class="slide-img" src="images/2.jpg" alt="我们的回忆2">
+            <img class="slide-img" src="images/3.jpg" alt="我们的回忆3">
+            <img class="slide-img" src="images/4.jpg" alt="我们的回忆4">
         </div>
         <div class="text-box" id="textBox">
             <div class="main-title">❤️ 从此牵手同行 ❤️</div>
@@ -405,7 +411,6 @@
     </div>
 
     <script>
-        // 全局元素
         const bgm = document.getElementById('bgm');
         const playBtn = document.getElementById('playBtn');
         const gameBox = document.getElementById('gameBox');
@@ -422,18 +427,18 @@
 
         let moveRange = 30;
         let slideIndex = 0;
-        // 随机生成 1-10 目标数字
-        const targetNum = Math.floor(Math.random() * 10) + 1;
+        let slideTimer = null; // 保存定时器 ID，防止内存泄漏
+        const targetNum = 520; // 固定答案：520 = 我爱你
 
         // 音乐控制
         document.addEventListener('click', function() {
-            bgm.play();
+            bgm.play().catch(() => {}); // 忽略浏览器自动播放拦截的错误
             playBtn.textContent = '⏸';
         }, { once: true });
 
         playBtn.addEventListener('click', function() {
             if (bgm.paused) {
-                bgm.play();
+                bgm.play().catch(() => {});
                 playBtn.textContent = '⏸';
             } else {
                 bgm.pause();
@@ -444,15 +449,14 @@
         // 猜数字游戏逻辑
         submitBtn.addEventListener('click', function() {
             const val = parseInt(numInput.value);
-            if (isNaN(val) || val < 1 || val > 10) {
+            if (isNaN(val) || val < 1 || val > 1000) {
                 msgBox.className = 'game-msg err';
-                msgBox.innerText = '请输入 1~10 之间的数字哦';
+                msgBox.innerText = '请输入 1~1000 之间的数字哦';
                 return;
             }
             if (val === targetNum) {
                 msgBox.className = 'game-msg success';
                 msgBox.innerText = '猜对啦！快来看看我的心意~';
-                // 延迟切换到表白页面
                 setTimeout(() => {
                     gameBox.style.display = 'none';
                     loveBox.style.display = 'block';
@@ -466,12 +470,11 @@
             }
         });
 
-        // 回车也能提交
         numInput.addEventListener('keydown', function(e) {
             if(e.key === 'Enter') submitBtn.click();
         });
 
-        // 星光特效
+        // 星光特效（修复：已补充 CSS .star 样式，每个星星有独立的动画延迟）
         function createStar() {
             const star = document.createElement('div');
             star.classList.add('star');
@@ -480,6 +483,7 @@
             star.style.height = size + 'px';
             star.style.left = Math.random() * 100 + 'vw';
             star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDelay = Math.random() * 2.5 + 's';
             document.body.appendChild(star);
         }
         for (let i = 0; i < 80; i++) createStar();
@@ -495,7 +499,7 @@
         }
         setInterval(createHeart, 260);
 
-        // 点击爱心
+        // 点击弹出爱心
         document.body.addEventListener('click', function(e) {
             const heart = document.createElement('div');
             heart.innerHTML = '💖';
@@ -506,9 +510,9 @@
             setTimeout(() => heart.remove(), 1400);
         });
 
-        // 逃跑按钮
+        // 逃跑按钮（修复：moveRange 上限 160px，防止飞出屏幕）
         function moveBtn() {
-            moveRange += 9;
+            moveRange = Math.min(moveRange + 9, 160);
             const x = Math.random() * moveRange - moveRange / 2;
             const y = Math.random() * moveRange - moveRange / 2;
             noBtn.style.transform = `translate(${x}px, ${y}px)`;
@@ -534,15 +538,24 @@
             slideImgs[slideIndex].classList.add('active');
         }
 
-        // 答应按钮逻辑
+        // 答应按钮逻辑（修复：先显示容器再启动轮播定时器，保存定时器 ID 防止泄漏）
         yesBtn.addEventListener('click', function(){
+            // 清除旧定时器（防止重复点击）
+            if (slideTimer) clearInterval(slideTimer);
+
             successPage.style.display = 'flex';
-            setTimeout(()=>slideBox.classList.add('show'),800);
-            setInterval(autoSlide,3000);
-            setTimeout(()=>textBox.classList.add('show'), 800 + slideImgs.length*3000);
-            for(let i=0;i<60;i++) setTimeout(createHeart,i*25);
-            const t=setInterval(fireworkHeart,90);
-            setTimeout(()=>clearInterval(t),5000);
+            setTimeout(() => {
+                slideBox.classList.add('show');
+                // 容器出现后再启动轮播
+                slideTimer = setInterval(autoSlide, 3000);
+            }, 800);
+
+            // 文字延迟出现：800ms 容器出现 + 4张图 * 3000ms 轮播 = 12800ms
+            setTimeout(() => textBox.classList.add('show'), 12800);
+
+            for(let i=0; i<60; i++) setTimeout(createHeart, i*25);
+            const t = setInterval(fireworkHeart, 90);
+            setTimeout(() => clearInterval(t), 5000);
         });
     </script>
 </body>
